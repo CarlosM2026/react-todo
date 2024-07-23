@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -6,10 +7,21 @@ import TodoList from './TodoList';
 import AddTodoForm from './AddTodoForm';
 
 
+const useSemiPersistentState = () => {
+  const [todoList,setTodoList] = useState(JSON.parse(localStorage.getItem('savedTodoList')));
+
+  useEffect(() => {
+    localStorage.setItem('savedTodoList', JSON.stringify(todoList))
+  }, [todoList])
+
+  return [todoList, setTodoList]
+
+}
+
 function App() {
   const [count, setCount] = useState(0)
 
-  const [todoList,setTodoList] = useState([]);
+  const [todoList,setTodoList] = useSemiPersistentState();
   const addTodo = (newTodo) => {
     setTodoList([...todoList, newTodo])
   }
